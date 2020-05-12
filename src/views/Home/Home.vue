@@ -3,19 +3,14 @@
     <navi-bar class="homeNav">
       <div slot="center">购物街</div>
     </navi-bar>
-    <home-swiper :banners="banners"></home-swiper>
-    <home-recommend :recommend="recommend"></home-recommend>
-    <home-feature></home-feature>
-    <tab-control :titles="['流行','新款','精选']" class="tab-control" @itemClick="tabClick"></tab-control>
-    <goods :goods="goods[currentType].data"></goods>
-    <button @click="homeClick">点击加载更多</button>
-    <ul>
-      <li>列表1</li>
-      <li>列表2</li>
-      <li>列表3</li>
-      <li>列表4</li>
-      <li>列表5</li>
-    </ul>
+    <my-scroll class="home-scroll" @pullingup="homeMoreGoods">
+      <home-swiper :banners="banners"></home-swiper>
+      <home-recommend :recommend="recommend"></home-recommend>
+      <home-feature></home-feature>
+      <tab-control :titles="['流行','新款','精选']" class="tab-control" @itemClick="tabClick"></tab-control>
+      <goods :goods="goods[currentType].data"></goods>
+    </my-scroll>
+
   </div>
 
 </template>
@@ -23,15 +18,19 @@
 <script>
     import NaviBar from "components/common/navibar/NaviBar";
     import Goods from "components/common/goods/Goods"
+    import TabControl from "components/common/tabcontrol/TabControl";
+    import Scroll from "components/common/scroll/Scroll"
+    import MyScroll from "components/common/scroll/MyScroll"
+
+
     import {getHomeMultiData,getGoods} from "network/home";
     import HomeSwiper from "./childComps/HomeSwiper";
     import HomeRecommend from "./childComps/HomeRecommend";
     import HomeFeature from "./childComps/HomeFeature";
-    import TabControl from "components/common/tabcontrol/TabControl";
 
     export default {
         name: "Home",
-        components: {TabControl, HomeFeature, HomeRecommend, HomeSwiper, NaviBar,Goods},
+        components: {TabControl, HomeFeature, HomeRecommend, HomeSwiper, NaviBar,Goods,Scroll,MyScroll},
         data(){
             return{
                 banners:[],
@@ -85,8 +84,8 @@
 
           },
 
-          //点击加载更多，获得更多商品展示
-          homeClick(){
+          //上拉加载更多
+          homeMoreGoods(){
             this.goods[this.currentType].page++
             getGoods(this.currentType,this.goods[this.currentType].page)
               .then(res=>{
@@ -119,5 +118,9 @@
     top:44px;
     background-color: #fff;
     z-index: 9;
+  }
+  .home-scroll{
+    height: calc(100vh - 93px);
+    overflow: hidden;
   }
 </style>
