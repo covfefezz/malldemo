@@ -2,7 +2,7 @@
   <div>
     <swiper ref="mySwiper" :options="swiperOptions" >
       <swiper-slide v-for="item in banners" class="home-swiper">
-        <a :href="item.link"><img :src="item.image"></a>
+        <a :href="item.link"><img :src="item.image" @load="imgLoad"></a>
       </swiper-slide>
       <!--分页器-->
       <div class="swiper-pagination" slot="pagination"></div>
@@ -51,6 +51,7 @@
                     //开启循环模式
                     loop: true
                 },
+              isLoad:false
 
             }
         },
@@ -60,7 +61,17 @@
                 type:Array,
                 default:{}
             }
+        },
+
+      methods: {
+        //判断轮播图是否加载完成
+        imgLoad(){
+          if(this.isLoad == false){
+            this.$emit('imgLoad')
+            this.isLoad = true
+          }
         }
+      }
     }
 </script>
 

@@ -14,20 +14,31 @@
     name: "MyScroll",
     data(){
       return{
-        bs:{}
+        bs:{},
+      }
+    },
+    props:{
+      typeNum:{
+        type:Number,
+        default:0
       }
     },
     mounted() {
       this.bs = new Scroll(this.$refs.mywrapper,{
         click:true,
         pullUpLoad:true,
-        mouseWheel: true
+        mouseWheel: true,
+        probeType:this.typeNum
       })
 
       this.bs.on('pullingUp',()=>{
         this.$emit('pullingup')
         this.bs.finishPullUp()
       })
+
+      this.bs.on('scroll',(position=>{
+        this.$emit('backtopshow',position)
+      }))
     }
   }
 </script>

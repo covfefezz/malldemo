@@ -3,14 +3,15 @@
     <navi-bar class="homeNav">
       <div slot="center">购物街</div>
     </navi-bar>
-    <my-scroll class="home-scroll" @pullingup="homeMoreGoods">
-      <home-swiper :banners="banners"></home-swiper>
+    <tab-control v-show="isTabControl" :titles="['流行','新款','精选']" class="fixed" @itemClick="tabClick" ref="tabControl1"></tab-control>
+    <my-scroll class="home-scroll" @pullingup="homeMoreGoods" ref="homeScroll" :type-num="3" @backtopshow="backTopShow">
+      <home-swiper :banners="banners" @imgLoad="getTCOffset"></home-swiper>
       <home-recommend :recommend="recommend"></home-recommend>
       <home-feature></home-feature>
-      <tab-control :titles="['流行','新款','精选']" class="tab-control" @itemClick="tabClick"></tab-control>
+      <tab-control :titles="['流行','新款','精选']" class="tab-control" @itemClick="tabClick" ref="tabControl2"></tab-control>
       <goods :goods="goods[currentType].data"></goods>
     </my-scroll>
-
+    <back-top @click.native="backTopClick" v-show="ifBackTop" ></back-top>
   </div>
 
 </template>
@@ -21,6 +22,7 @@
     import TabControl from "components/common/tabcontrol/TabControl";
     import Scroll from "components/common/scroll/Scroll"
     import MyScroll from "components/common/scroll/MyScroll"
+    import BackTop from "components/common/backtop/BackTop";
 
 
     import {getHomeMultiData,getGoods} from "network/home";
@@ -30,7 +32,7 @@
 
     export default {
         name: "Home",
-        components: {TabControl, HomeFeature, HomeRecommend, HomeSwiper, NaviBar,Goods,Scroll,MyScroll},
+        components: {BackTop, TabControl, HomeFeature, HomeRecommend, HomeSwiper, NaviBar,Goods,Scroll,MyScroll},
         data(){
             return{
                 banners:[],
@@ -40,7 +42,10 @@
                   new:{page:1, data:[]},
                   sell:{page:1, data:[]}
                 },
-                currentType:'pop'
+                currentType:'pop',
+              ifBackTop:false,
+              tabControlOffset:0,
+              isTabControl:false
             }
         },
 
@@ -59,6 +64,7 @@
             })
 
         },
+
         
         
         methods:{
@@ -82,6 +88,9 @@
                 })
             }
 
+            this.$refs.tabControl1.currentIndex = index
+            this.$refs.tabControl2.currentIndex = index
+
           },
 
           //上拉加载更多
@@ -91,6 +100,29 @@
               .then(res=>{
                 this.goods[this.currentType].data.push(...res.data.list)
               })
+          },
+
+          //点击按钮返回顶部
+          backTopClick(){
+            this.$refs.homeScroll.bs.scrollTo(0,0,500)
+          },
+
+          //计算滚动属性判定要不要显示返回顶部按钮及显示顶部tabControl
+          backTopShow(position){
+            this.ifBackTop = position.y <-2000
+
+
+            if(-position.y > this.tabControlOffset){
+              this.isTabControl = true
+            }
+            else {
+              this.isTabControl = false
+            }
+          },
+
+          //轮播图加载完成时获得tabControl的Offset
+          getTCOffset(){
+            this.tabControlOffset = this.$refs.tabControl2.$el.offsetTop
           }
         }
 
@@ -102,7 +134,8 @@
 <style scoped>
 
   #home{
-    padding-top: 44px;
+    /*padding-top: 44px;*/
+    height: 100vh;
   }
   .homeNav{
     background-color: #FC4366;
@@ -113,14 +146,28 @@
     top:0;
     z-index:9
   }
+
   .tab-control{
-    position: sticky;
-    top:44px;
+
     background-color: #fff;
-    z-index: 9;
+
+
   }
   .home-scroll{
     height: calc(100vh - 93px);
     overflow: hidden;
+    position: absolute;
+    top:44px;
+    bottom: 49px;
+    left: 0;
+    right: 0;
+  }
+  .fixed{
+    background-color: #fff;
+    position: fixed;
+    top: 44px;
+    left: 0;
+    right: 0;
+    z-index: 9;
   }
 </style>
