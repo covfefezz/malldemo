@@ -1,6 +1,8 @@
 <template>
   <div id="app">
-    <router-view></router-view>
+    <keep-alive exclude="Detail">
+      <router-view></router-view>
+    </keep-alive>
     <tabbar>
       <tabbar-item v-for="(item,index) in tabbarData" :tabbarDataName="item.name" :tabbarDataPath="(currentIndex===index?item.imgPath2:item.imgPath1)" :pathProp="item.path" @tabbarItemClick="setIndex(index)">
       </tabbar-item>

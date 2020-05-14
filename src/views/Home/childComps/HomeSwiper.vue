@@ -8,8 +8,8 @@
       <div class="swiper-pagination" slot="pagination"></div>
 
       <!--左右箭头-->
-      <div class="swiper-button-prev" slot="button-prev"></div>
-      <div class="swiper-button-next" slot="button-next"></div>
+      <!--<div class="swiper-button-prev" slot="button-prev"></div>-->
+      <!--<div class="swiper-button-next" slot="button-next"></div>-->
     </swiper>
   </div>
 </template>
