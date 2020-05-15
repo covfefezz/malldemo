@@ -20,7 +20,6 @@
     import NaviBar from "components/common/navibar/NaviBar";
     import Goods from "components/common/goods/Goods"
     import TabControl from "components/common/tabcontrol/TabControl";
-    import Scroll from "components/common/scroll/Scroll"
     import MyScroll from "components/common/scroll/MyScroll"
     import BackTop from "components/common/backtop/BackTop";
 
@@ -32,7 +31,7 @@
 
     export default {
         name: "Home",
-        components: {BackTop, TabControl, HomeFeature, HomeRecommend, HomeSwiper, NaviBar,Goods,Scroll,MyScroll},
+        components: {BackTop, TabControl, HomeFeature, HomeRecommend, HomeSwiper, NaviBar,Goods,MyScroll},
         data(){
             return{
                 banners:[],
@@ -65,6 +64,14 @@
 
         },
 
+      mounted(){
+          //监听商品图片完成事件并刷新可滑动区域高度
+        const refresh = this.debouce(()=>{
+          this.$refs.homeScroll.refresh
+        },500)
+        this.$bus.$on('goodsItemLoad',refresh)
+      },
+
         
         
         methods:{
@@ -90,6 +97,7 @@
 
             this.$refs.tabControl1.currentIndex = index
             this.$refs.tabControl2.currentIndex = index
+
 
           },
 
@@ -123,6 +131,15 @@
           //轮播图加载完成时获得tabControl的Offset
           getTCOffset(){
             this.tabControlOffset = this.$refs.tabControl2.$el.offsetTop
+          },
+
+          //防抖函数
+          debouce(fn,delay){
+            let timer = null
+            return function () {
+              if(timer) clearTimeout(timer)
+              timer = setTimeout(fn,delay)
+            }
           }
         }
 

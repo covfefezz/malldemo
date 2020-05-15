@@ -1,6 +1,6 @@
 <template>
   <div class="goods-item" @click="goodsItemClick">
-    <img  :src="item.show.img" alt="">
+    <img  :src="item.show.img" alt="" @load="imgLoad">
     <div class="goods-info">
       <p>{{item.title}}</p>
       <span class="price">¥{{item.price}}</span>
@@ -24,6 +24,11 @@
             id:this.item.iid
           }
         })
+      },
+
+      //商品图片加载完成通过事件总线发送事件给home
+      imgLoad(){
+        this.$bus.$emit('goodsItemLoad')
       }
     }
   }

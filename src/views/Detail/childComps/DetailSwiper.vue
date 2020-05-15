@@ -70,6 +70,7 @@
 <style scoped>
   .detail-swiper{
     /*width: 100%;*/
+    text-align: center;
     height: 300px;
     overflow: hidden;
   }

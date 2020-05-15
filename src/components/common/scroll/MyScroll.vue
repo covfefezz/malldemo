@@ -39,6 +39,12 @@
       this.bs.on('scroll',(position=>{
         this.$emit('backtopshow',position)
       }))
+    },
+
+    methods:{
+      refresh(){
+        return this.bs.refresh()
+      }
     }
   }
 </script>
