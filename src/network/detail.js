@@ -9,7 +9,7 @@ export function getGoodsDetail(iid) {
   })
 }
 
-export class Goods{
+export class GoodsInfo{
   constructor(itemInfo, columns, services) {
     this.title = itemInfo.title;
     this.desc = itemInfo.desc;
@@ -31,4 +31,10 @@ export class Shop{
     this.score = shopInfo.score;
     this.goodsCount = shopInfo.cGoods
   }
+}
+
+export function getRecommend() {
+  return request({
+    url:'/recommend'
+  })
 }

@@ -1,6 +1,6 @@
 <template>
   <div class="goods-item" @click="goodsItemClick">
-    <img  :src="item.show.img" alt="" @load="imgLoad">
+    <img  :src="showImage" alt="" @load="imgLoad">
     <div class="goods-info">
       <p>{{item.title}}</p>
       <span class="price">¥{{item.price}}</span>
@@ -15,6 +15,12 @@
     props:{
       item:Object
     },
+    computed:{
+      showImage() {
+        return this.item.image || this.item.show.img
+      }
+        // return this.item.show.img || this.item.image
+    },
     methods:{
       //点击跳转进商品详情页
       goodsItemClick(){
@@ -28,7 +34,13 @@
 
       //商品图片加载完成通过事件总线发送事件给home
       imgLoad(){
-        this.$bus.$emit('goodsItemLoad')
+        if(this.$route.path=== '/home'){
+          this.$bus.$emit('homeGoodsItemLoad')
+        }
+        if(this.$route.path === '/detail'){
+          this.$bus.$emit('detailGoodsItemLoad')
+        }
+
       }
     }
   }

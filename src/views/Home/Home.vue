@@ -4,7 +4,7 @@
       <div slot="center">购物街</div>
     </navi-bar>
     <tab-control v-show="isTabControl" :titles="['流行','新款','精选']" class="fixed" @itemClick="tabClick" ref="tabControl1"></tab-control>
-    <my-scroll class="home-scroll" @pullingup="homeMoreGoods" ref="homeScroll" :type-num="3" @backtopshow="backTopShow">
+    <my-scroll class="home-scroll" @pullingup="homeMoreGoods" ref="homeScroll" :type-num="3" @getPosition="backTopShow">
       <home-swiper :banners="banners" @imgLoad="getTCOffset"></home-swiper>
       <home-recommend :recommend="recommend"></home-recommend>
       <home-feature></home-feature>
@@ -25,6 +25,8 @@
 
 
     import {getHomeMultiData,getGoods} from "network/home";
+    import {debounce} from "common/utils";
+
     import HomeSwiper from "./childComps/HomeSwiper";
     import HomeRecommend from "./childComps/HomeRecommend";
     import HomeFeature from "./childComps/HomeFeature";
@@ -66,10 +68,9 @@
 
       mounted(){
           //监听商品图片完成事件并刷新可滑动区域高度
-        const refresh = this.debouce(()=>{
-          this.$refs.homeScroll.refresh
-        },500)
-        this.$bus.$on('goodsItemLoad',refresh)
+        const refresh =debounce(this.$refs.homeScroll.refresh,500)
+        this.$bus.$on('homeGoodsItemLoad',refresh)
+
       },
 
         
@@ -112,7 +113,7 @@
 
           //点击按钮返回顶部
           backTopClick(){
-            this.$refs.homeScroll.bs.scrollTo(0,0,500)
+            this.$refs.homeScroll.scrollTo(0,0,500)
           },
 
           //计算滚动属性判定要不要显示返回顶部按钮及显示顶部tabControl
@@ -134,13 +135,7 @@
           },
 
           //防抖函数
-          debouce(fn,delay){
-            let timer = null
-            return function () {
-              if(timer) clearTimeout(timer)
-              timer = setTimeout(fn,delay)
-            }
-          }
+
         }
 
 

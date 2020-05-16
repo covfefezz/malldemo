@@ -37,13 +37,18 @@
       })
 
       this.bs.on('scroll',(position=>{
-        this.$emit('backtopshow',position)
+        this.$emit('getPosition',position)
       }))
     },
 
     methods:{
       refresh(){
+        console.log('---');
         return this.bs.refresh()
+      },
+
+      scrollTo(x,y,delay){
+        return this.bs.scrollTo(x,y,delay)
       }
     }
   }
