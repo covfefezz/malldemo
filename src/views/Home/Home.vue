@@ -74,8 +74,6 @@
       },
 
       updated(){
-        this.$refs.homeScroll.refresh()
-        console.log('update');
       },
 
         

@@ -17,7 +17,9 @@
       <detail-comment :commentInfo="commentInfo" ref="comment"></detail-comment>
       <goods :goods="recommend" ref="recommend"></goods>
     </my-scroll>
-    <detail-bottom-bar></detail-bottom-bar>
+    <detail-bottom-bar @addToCart="addToCart"></detail-bottom-bar>
+    <back-top @click.native="backTopClick" v-show="ifBackTop" ></back-top>
+
 
   </div>
 </template>
@@ -26,6 +28,7 @@
   import NaviBar from "components/common/navibar/NaviBar";
   import MyScroll from "components/common/scroll/MyScroll";
   import Goods from "components/common/goods/Goods"
+  import BackTop from "components/common/backtop/BackTop";
   import {getGoodsDetail,GoodsInfo,Shop,getRecommend} from "network/detail";
   import {debounce} from "common/utils";
 
@@ -40,7 +43,7 @@
   export default {
     name: "Detail",
     components: {
-      Goods,
+      Goods,BackTop,
       GoodsInfo,
       DetailComment,
       DetailParams, DetailImages, MyScroll, DetailShopInfo, DetailBaseInfo, DetailSwiper, NaviBar,DetailBottomBar},
@@ -56,8 +59,10 @@
         itemParams: {},
         commentInfo:{},
         recommend:[],
+        ifBackTop:false,
         themesTops:[],
-        themeTopsPush:null
+        themeTopsPush:null,
+        GoodsId:''
       }
     },
 
@@ -65,6 +70,8 @@
       //请求商品详情数据
       getGoodsDetail(this.$route.query.id)
         .then(res=>{
+          //获取商品的id
+          this.GoodsId = this.$route.query.id
           //轮播图地址赋值
           this.topImages=res.result.itemInfo.topImages
           //商品基本信息赋值
@@ -99,7 +106,6 @@
         this.themesTops.push(this.$refs.params.$el.offsetTop-44)
         this.themesTops.push(this.$refs.comment.$el.offsetTop-44)
         this.themesTops.push(this.$refs.recommend.$el.offsetTop-44)
-        console.log(this.themesTops)
       },500)
     },
 
@@ -129,8 +135,11 @@
         this.themeTopsPush()
       },
 
-      //根据滚动切换导航栏标题
+      //根据滚动切换导航栏标题及判定要不要显示返回顶部按钮
       switchTheme(position){
+        //计算滚动属性判定要不要显示返回顶部按钮
+        this.ifBackTop = position.y <-2000
+        //根据滚动切换导航栏标题
         const length = this.themesTops.length
         if(length !==0){
           const positionY = -position.y
@@ -150,10 +159,28 @@
             //   this.currentIndex=i
             //   console.log(i);
             // }
+
           }
         }
+      },
 
+      //点击按钮返回顶部
+      backTopClick(){
+        this.$refs.detailScroll.scrollTo(0,0,500)
+      },
 
+      //把商品加入到购物车
+      addToCart(){
+        //获取商品需要展示的信息
+        const product = {}
+        product.id = this.GoodsId;
+        product.imgURL = this.topImages[0]
+        product.title = this.goods.title
+        product.desc = this.goods.desc;
+        product.newPrice = this.goods.nowPrice;
+
+        //把商品信息添加到vuex中
+        this.$store.dispatch('addCart',product)
       }
     }
   }

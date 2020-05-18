@@ -43,7 +43,6 @@
 
     methods:{
       refresh(){
-        console.log('---');
         return this.bs.refresh()
       },
 
