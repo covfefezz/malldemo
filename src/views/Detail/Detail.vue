@@ -17,6 +17,7 @@
       <detail-comment :commentInfo="commentInfo" ref="comment"></detail-comment>
       <goods :goods="recommend" ref="recommend"></goods>
     </my-scroll>
+    <detail-bottom-bar></detail-bottom-bar>
 
   </div>
 </template>
@@ -34,6 +35,7 @@
   import DetailImages from "./childComps/DetailImages";
   import DetailParams from "./childComps/DetailParams";
   import DetailComment from "./childComps/DetailComment";
+  import DetailBottomBar from "./childComps/DetailBottomBar"
 
   export default {
     name: "Detail",
@@ -41,7 +43,7 @@
       Goods,
       GoodsInfo,
       DetailComment,
-      DetailParams, DetailImages, MyScroll, DetailShopInfo, DetailBaseInfo, DetailSwiper, NaviBar},
+      DetailParams, DetailImages, MyScroll, DetailShopInfo, DetailBaseInfo, DetailSwiper, NaviBar,DetailBottomBar},
     data(){
       return{
         titles:['商品','参数','评论','推荐'],
@@ -187,6 +189,7 @@
     z-index: 1;
   }
   .content{
-    height: calc(100vh - 44px);
+    height: calc(100vh - 44px - 58px);
+    bottom:58px
   }
 </style>

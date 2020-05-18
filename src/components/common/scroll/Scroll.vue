@@ -9,9 +9,9 @@
 </template>
 
 <script>
-  import BScroll from "@better-scroll/core"
-  import Pullup from "@better-scroll/pull-up"
-  import MouseWhell from "@better-scroll/mouse-wheel"
+  // import BScroll from "@better-scroll/core"
+  // import Pullup from "@better-scroll/pull-up"
+  // import MouseWhell from "@better-scroll/mouse-wheel"
 
   BScroll.use(Pullup)
   BScroll.use(MouseWhell)
