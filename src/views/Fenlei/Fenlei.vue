@@ -106,11 +106,10 @@
 </template>
 
 <script>
-    import Scroll from "components/common/scroll/Scroll";
     import MyScroll from "components/common/scroll/MyScroll";
     export default {
         name: "Fenlei",
-      components: {MyScroll, Scroll}
+      components: {MyScroll}
     }
 </script>
 
